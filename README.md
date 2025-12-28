@@ -1,13 +1,3 @@
-# FERMAT-Search-Take-Home
-Basic product catalog application for FERMAT Commerce
-venv\Scripts\Activate.ps1
-Frontend activation C:\Users\kanis\Downloads\FERMAT-Search-Take-Home\frontend> npm run dev
-Backend Activation C:\Users\kanis\Downloads\FERMAT-Search-Take-Home\backend> uvicorn app.main:app --reload
-
-Perfect! After all that, the README is actually **your chance to shine** without coding more. We can make it **professional, clear, and complete**, so your submission looks polished. Here’s a structured draft you can start with — you just need to fill in any small details about your environment or extra notes:
-
----
-
 # FERMAT E-commerce Product Catalog
 
 ## Overview
@@ -19,7 +9,18 @@ Frontend: React + Vite
 
 
 ---
+## Running from Terminal
 
+* **Activate virtual environment**
+    * (From root directory) venv\Scripts\Activate.ps1
+
+* **Frontend Startup**
+    * (From frontend directory) npm run dev
+
+* **Backend Startup**
+    * (From backend directory) uvicorn app.main:app --reload
+
+---
 ## Architecture / Approach
 
 * **Backend:**
@@ -50,7 +51,8 @@ Popularity is computed from `orders.json` by counting the number of times each p
 
 ## Bonus Features Implemented
 
-* **Pagination** (frontend)
+* **Pagination** 
+* **Debounced Search** (prevents excessive API calls while typing)
 
 Optional features not implemented:
 
@@ -76,6 +78,17 @@ Optional features not implemented:
 cd backend
 pytest
 ```
+
+---
+## What I Would Do With More Time
+
+With additional time, I would focus on:
+
+- Implementing backend pagination to improve scalability for large datasets
+- Adding URL state management so filters and search queries are shareable
+- Making category and brand filters fully dynamic and dependent on each other
+- Implementing co-purchase recommendations based on order history
+- Adding caching or memoization to reduce repeated computations on the backend
 
 ---
 

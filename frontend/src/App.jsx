@@ -3,6 +3,7 @@ import ProductCard from "./components/ProductCard";
 
 function App() {
   const [products, setProducts] = useState([]);
+  const [allBrands, setAllBrands] = useState([]); // ✅ stable brand list
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -26,7 +27,7 @@ function App() {
 
   // Fetch products whenever search/filter/sort changes
   useEffect(() => {
-    setCurrentPage(1); // reset to first page on filter/search change
+    setCurrentPage(1);
     setLoading(true);
 
     const params = new URLSearchParams();
@@ -44,6 +45,14 @@ function App() {
       })
       .then((data) => {
         setProducts(data);
+
+        // ✅ initialize brand list ONCE
+        setAllBrands((prev) =>
+          prev.length === 0
+            ? [...new Set(data.map((p) => p.brand))].sort()
+            : prev
+        );
+
         setLoading(false);
       })
       .catch((err) => {
@@ -90,13 +99,14 @@ function App() {
           <option value="Home & Garden">Home & Garden</option>
         </select>
 
+        {/* ✅ Stable brand dropdown */}
         <select value={brand} onChange={(e) => setBrand(e.target.value)}>
           <option value="">All Brands</option>
-          <option value="AudioTech">AudioTech</option>
-          <option value="EcoWear">EcoWear</option>
-          <option value="HydroFlask">HydroFlask</option>
-          <option value="BrightHome">BrightHome</option>
-          <option value="Harriman House">Harriman House</option>
+          {allBrands.map((b) => (
+            <option key={b} value={b}>
+              {b}
+            </option>
+          ))}
         </select>
 
         <input
@@ -129,27 +139,33 @@ function App() {
       ) : currentProducts.length === 0 ? (
         <p>No products match your search or filters.</p>
       ) : (
-        
-    <div style={{ display: "flex", justifyContent: "center" }}>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-          gap: "24px",
-          width: "100%",
-          maxWidth: "1600px"
-        }}
-      >
-        {currentProducts.map((p) => (
-          <ProductCard key={p.id} product={p} />
-        ))}
-      </div>
-    </div>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              gap: "24px",
+              width: "100%",
+              maxWidth: "1600px"
+            }}
+          >
+            {currentProducts.map((p) => (
+              <ProductCard key={p.id} product={p} />
+            ))}
+          </div>
+        </div>
       )}
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div style={{ marginTop: "20px", display: "flex", gap: "10px", flexWrap: "wrap" }}>
+        <div
+          style={{
+            marginTop: "20px",
+            display: "flex",
+            gap: "10px",
+            flexWrap: "wrap"
+          }}
+        >
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
@@ -160,7 +176,9 @@ function App() {
             Page {currentPage} of {totalPages}
           </span>
           <button
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
             disabled={currentPage === totalPages}
           >
             Next
