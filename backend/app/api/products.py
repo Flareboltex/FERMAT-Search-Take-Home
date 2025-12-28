@@ -7,8 +7,8 @@ from app.services.product_service import attach_popularity_to_products
 router = APIRouter()
 
 # Load data at startup
-_products = load_products(sample=True)
-_orders = load_orders(sample=True)
+_products = load_products(sample=False)
+_orders = load_orders(sample=False)
 
 _popularity_map = calculate_product_popularity(_orders)
 _enriched_products = attach_popularity_to_products(_products, _popularity_map)
